@@ -10,8 +10,8 @@ STATE=~/.PyLabState
 RUNNING=true
 
 # remove then add to .bashrc to auto restart install process on login
-sed --in-place '/~\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/setup.sh/d' ~/.bashrc
-echo "~/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/setup.sh" >> ~/.bashrc
+sed --in-place '/~\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/install.sh/d' ~/.bashrc
+echo "~/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/install.sh" >> ~/.bashrc
 
 while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
@@ -21,7 +21,7 @@ while $RUNNING; do
             read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) OS_UPDATE=true; break;;
-                [Qq]* ) RUNNING=false;;
+                [Qq]* ) RUNNING=false; break;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
@@ -39,7 +39,7 @@ while $RUNNING; do
             read -p "Do you wish to set High Power Mode (This requires 4amp barrel power adapter) [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) HIGH_POWER=true; break;;
-                [Qq]* ) RUNNING=false;;
+                [Qq]* ) RUNNING=false; break;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
@@ -57,7 +57,7 @@ while $RUNNING; do
             read -p "Do you wish to enable xRDP (with xfce) [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) XRDP=true; break;;
-                [Qq]* ) RUNNING=false;;
+                [Qq]* ) RUNNING=false; break;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
@@ -79,7 +79,7 @@ while $RUNNING; do
             read -p "Do you wish to enable USB3 SSD Boot Support [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) BOOT_USB3=true; break;;
-                [Qq]* ) RUNNING=false;;
+                [Qq]* ) RUNNING=false; break;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
@@ -130,4 +130,4 @@ done
 
 rm $STATE
 # remove install process from .bashrc
-sed --in-place '/~\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/setup.sh/d' ~/.bashrc
+sed --in-place '/~\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/install.sh/d' ~/.bashrc
