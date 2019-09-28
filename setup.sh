@@ -64,8 +64,6 @@ while $RUNNING; do
             esac
         done
 
-        echo "XRDP" > $STATE
-
         if [ "$BOOT_USB3" = true ]; then
             echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
             echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
@@ -93,9 +91,10 @@ while $RUNNING; do
                 echo "      APPEND ${cbootargs} root=/dev/sda1 rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
 
             fi
-
             cd ..
         fi
+
+        echo "XRDP" > $STATE
         ;;
 
     XRDP)
