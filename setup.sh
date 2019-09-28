@@ -16,7 +16,56 @@ echo "~/JetsonSetup/setup.sh" >> ~/.bashrc
 while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
 
-    INIT)
+  INIT)
+        while true; do
+            echo -e "\nThis script assumes the USB3 SSD Drive is mounted at /dev/sda ready for partitioning and formating" 
+            read -p "Do you wish to enable USB3 SSD Boot Support [yes(y), no(n), or quit(q)] ?" yn
+            case $yn in
+                [Yy]* ) BOOT_USB3=true; break;;
+                [Qq]* ) RUNNING=false; break;;
+                [Nn]* ) break;;
+                * ) echo "Please answer yes(y), no(n), or quit(q).";;
+            esac
+        done
+
+        echo "UPDATE" > $STATE
+
+        if [ "$BOOT_USB3" = true ]; then
+            echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
+            echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
+            sudo fdisk /dev/sda
+            sudo mkfs.ext4 /dev/sda1
+            sudo mkdir /media/usbdrive
+            sudo mount /dev/sda1 /media/usbdrive
+
+            sudo apt update && sudo apt install rsync
+
+            sudo rm -f -r rootOnUSB
+            git clone https://github.com/JetsonHacksNano/rootOnUSB.git
+
+            cd rootOnUSB
+
+            ./addUSBToInitramfs.sh
+            ./copyRootToUSB.sh -d /media/usbdrive
+
+            if [ $? -eq 0 ]; then
+
+                sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
+                sudo sed -i 's/LABEL primary/LABEL emmc/g' /boot/extlinux/extlinux.conf
+                echo "LABEL primary" | sudo tee -a /boot/extlinux/extlinux.conf
+                echo "      MENU LABEL primary kernel" | sudo tee -a /boot/extlinux/extlinux.conf
+                echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
+                echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
+                echo "      APPEND ${cbootargs} root=/dev/sda1 rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
+
+                sudo cat /boot/extlinux/extlinux.conf
+
+                sudo reboot
+            fi            
+        fi
+        ;;
+
+    UPDATE)
         while true; do
             read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
@@ -49,53 +98,8 @@ while $RUNNING; do
             sudo nvpmodel -m 0
         fi
 
-        echo "SSD" > $STATE
-        ;;  
-
-    SSD)
-        while true; do
-            echo -e "\nThis script assumes the USB3 SSD Drive is mounted at /dev/sda ready for partitioning and formating" 
-            read -p "Do you wish to enable USB3 SSD Boot Support [yes(y), no(n), or quit(q)] ?" yn
-            case $yn in
-                [Yy]* ) BOOT_USB3=true; break;;
-                [Qq]* ) RUNNING=false; break;;
-                [Nn]* ) break;;
-                * ) echo "Please answer yes(y), no(n), or quit(q).";;
-            esac
-        done
-
         echo "XRDP" > $STATE
-
-        if [ "$BOOT_USB3" = true ]; then
-            echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
-            echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
-            sudo fdisk /dev/sda
-            sudo mkfs.ext4 /dev/sda1
-            sudo mkdir /media/usbdrive
-            sudo mount /dev/sda1 /media/usbdrive
-
-            sudo rm -f -r rootOnUSB
-            git clone https://github.com/JetsonHacksNano/rootOnUSB.git
-
-            cd rootOnUSB
-
-            ./addUSBToInitramfs.sh
-            ./copyRootToUSB.sh -d /media/usbdrive
-
-            if [ $? -eq 0 ]; then
-
-                sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
-                sudo sed -i 's/LABEL primary/LABEL emmc/g' /boot/extlinux/extlinux.conf
-                echo "LABEL primary" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      MENU LABEL primary kernel" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      APPEND ${cbootargs} root=/dev/sda1 rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
-
-                sudo reboot
-            fi            
-        fi
-        ;;
+        ;;      
 
     XRDP)
         while true; do
