@@ -27,11 +27,11 @@ while $RUNNING; do
             esac
         done
 
-        echo "HIGH_POWER" > $STATE
-
         if [ "$OS_UPDATE" = true ]; then
             sudo apt update && sudo apt upgrade -y && sudo reboot
         fi
+        
+        echo "HIGH_POWER" > $STATE
         ;;    
 
     HIGH_POWER)
@@ -45,11 +45,11 @@ while $RUNNING; do
             esac
         done
 
-        echo "SSD" > $STATE
-
         if [ "$HIGH_POWER" = true ]; then
             sudo nvpmodel -m 0
         fi
+
+        echo "SSD" > $STATE
         ;;  
 
     SSD)
@@ -106,9 +106,7 @@ while $RUNNING; do
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
-        done
-
-        echo "BREAK" > $STATE
+        done        
 
         if [ "$XRDP" = true ]; then
             # https://medium.com/@vivekteega/how-to-setup-an-xrdp-server-on-ubuntu-18-04-89f7e205bd4e
@@ -116,6 +114,8 @@ while $RUNNING; do
             sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh
             sudo /etc/init.d/xrdp restart
         fi
+
+        echo "BREAK" > $STATE
         ;; 
 
     BREAK)
