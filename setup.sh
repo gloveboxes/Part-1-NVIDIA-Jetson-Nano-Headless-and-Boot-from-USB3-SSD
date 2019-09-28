@@ -17,15 +17,6 @@ while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
 
     INIT)
-        cd
-        git clone https://github.com/gloveboxes/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD.git
-        sudo chmod +x ~/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/setup.sh
-        ~/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/setup.sh
-
-        echo "UPDATE" > $STATE
-        ;;
-
-    UPDATE)
         while true; do
             read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
