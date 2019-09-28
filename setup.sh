@@ -72,11 +72,11 @@ while $RUNNING; do
                 echo "      MENU LABEL primary kernel" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      APPEND ${cbootargs} root=/dev/sda1 rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
+                echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
 
                 sudo cat /boot/extlinux/extlinux.conf
 
-                sudo reboot
+                # sudo reboot
             fi            
         fi
         ;;    
