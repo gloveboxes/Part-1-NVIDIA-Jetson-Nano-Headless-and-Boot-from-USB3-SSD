@@ -27,19 +27,12 @@ while $RUNNING; do
             esac
         done
 
-        echo "CLONE" > $STATE
+        echo "HIGH_POWER" > $STATE
 
         if [ "$OS_UPDATE" = true ]; then
             sudo apt update && sudo apt upgrade -y && sudo reboot
         fi
         ;;    
-
-    CLONE)
-
-        git clone https://github.com/JetsonHacksNano/rootOnUSB.git
-        echo "HIGH_POWER" > $STATE
-
-        ;;      
 
     HIGH_POWER)
         while true; do
@@ -102,7 +95,11 @@ while $RUNNING; do
             sudo mkdir /media/usbdrive
             sudo mount /dev/sda1 /media/usbdrive
 
+            sudo rm -f -r rootOnUSB
+            git clone https://github.com/JetsonHacksNano/rootOnUSB.git
+
             cd rootOnUSB
+
             ./addUSBToInitramfs.sh
             ./copyRootToUSB.sh -d /media/usbdrive
 
@@ -117,6 +114,8 @@ while $RUNNING; do
                 echo "      APPEND ${cbootargs} root=/dev/sda1 rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
 
             fi
+
+            cd ..
         fi
         ;;
 
