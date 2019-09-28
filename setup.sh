@@ -66,13 +66,13 @@ while $RUNNING; do
 
             if [ $? -eq 0 ]; then
 
-                sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
-                sudo sed -i 's/LABEL primary/LABEL emmc/g' /boot/extlinux/extlinux.conf
-                echo "LABEL primary" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      MENU LABEL primary kernel" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
+                # sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
+                # sudo sed -i 's/LABEL primary/LABEL emmc/g' /boot/extlinux/extlinux.conf
+                # echo "LABEL primary" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      MENU LABEL primary kernel" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
 
                 sudo cat /boot/extlinux/extlinux.conf
 
