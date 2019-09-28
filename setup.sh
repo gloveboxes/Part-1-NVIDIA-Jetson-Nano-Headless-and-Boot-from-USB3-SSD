@@ -87,7 +87,7 @@ while $RUNNING; do
             case $yn in
                 [Yy]* ) BOOT_USB3=true; break;;
                 [Qq]* ) exit 1;;
-                [Nn]* ) exit 1;;
+                [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
         done
