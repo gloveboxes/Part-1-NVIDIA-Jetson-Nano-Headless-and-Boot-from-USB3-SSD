@@ -10,8 +10,8 @@ STATE=~/.PyLabState
 RUNNING=true
 
 # remove then add to .bashrc to auto restart install process on login
-sed --in-place '/~\/JetsonSetup\/install.sh/d' ~/.bashrc
-echo "~/JetsonSetup/install.sh" >> ~/.bashrc
+sed --in-place '/~\/JetsonSetup\/setup.sh/d' ~/.bashrc
+echo "~/JetsonSetup/setup.sh" >> ~/.bashrc
 
 while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
@@ -130,4 +130,4 @@ done
 
 rm $STATE
 # remove install process from .bashrc
-sed --in-place '/~\/JetsonSetup\/install.sh/d' ~/.bashrc
+sed --in-place '/~\/JetsonSetup\/setup.sh/d' ~/.bashrc
