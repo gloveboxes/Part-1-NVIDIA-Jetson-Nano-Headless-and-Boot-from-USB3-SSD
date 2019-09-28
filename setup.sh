@@ -45,33 +45,12 @@ while $RUNNING; do
             esac
         done
 
-        echo "XRDP" > $STATE
+        echo "SSD" > $STATE
 
         if [ "$HIGH_POWER" = true ]; then
             sudo nvpmodel -m 0
         fi
         ;;  
-
-    XRDP)
-        while true; do
-            read -p "Do you wish to enable xRDP (with xfce) [yes(y), no(n), or quit(q)] ?" yn
-            case $yn in
-                [Yy]* ) XRDP=true; break;;
-                [Qq]* ) RUNNING=false; break;;
-                [Nn]* ) break;;
-                * ) echo "Please answer yes(y), no(n), or quit(q).";;
-            esac
-        done
-
-        echo "SSD" > $STATE
-
-        if [ "$XRDP" = true ]; then
-            # https://medium.com/@vivekteega/how-to-setup-an-xrdp-server-on-ubuntu-18-04-89f7e205bd4e
-            sudo apt install -y xrdp xfce4-terminal 
-            sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh
-            sudo /etc/init.d/xrdp restart
-        fi
-        ;; 
 
     SSD)
         while true; do
@@ -85,11 +64,11 @@ while $RUNNING; do
             esac
         done
 
-        echo "BREAK" > $STATE
+        echo "XRDP" > $STATE
 
         if [ "$BOOT_USB3" = true ]; then
             echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
-            echo -e "\nUsage: p to print existing partitions, d to delete existing, n to create new partition, select p for new primary, take defaults, finally w to write changes.\n"
+            echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
             sudo fdisk /dev/sda
             sudo mkfs.ext4 /dev/sda1
             sudo mkdir /media/usbdrive
@@ -118,6 +97,27 @@ while $RUNNING; do
             cd ..
         fi
         ;;
+
+    XRDP)
+        while true; do
+            read -p "Do you wish to enable xRDP (with xfce) [yes(y), no(n), or quit(q)] ?" yn
+            case $yn in
+                [Yy]* ) XRDP=true; break;;
+                [Qq]* ) RUNNING=false; break;;
+                [Nn]* ) break;;
+                * ) echo "Please answer yes(y), no(n), or quit(q).";;
+            esac
+        done
+
+        echo "BREAK" > $STATE
+
+        if [ "$XRDP" = true ]; then
+            # https://medium.com/@vivekteega/how-to-setup-an-xrdp-server-on-ubuntu-18-04-89f7e205bd4e
+            sudo apt install -y xrdp xfce4-terminal 
+            sudo sed -i.bak '/fi/a #xrdp multiple users configuration \n xfce-session \n' /etc/xrdp/startwm.sh
+            sudo /etc/init.d/xrdp restart
+        fi
+        ;; 
 
     BREAK)
       RUNNING=false
