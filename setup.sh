@@ -118,6 +118,7 @@ while $RUNNING; do
 
             fi
         fi
+        ;;
 
     BREAK)
       RUNNING=false
