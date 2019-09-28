@@ -17,7 +17,6 @@ while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
 
     INIT)
-        sudo rm -r -f Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD
         git clone https://github.com/gloveboxes/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD.git
         sudo chmod +x Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/setup.sh
         Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/setup.sh
