@@ -10,8 +10,8 @@ STATE=~/.PyLabState
 RUNNING=true
 
 # remove then add to .bashrc to auto restart install process on login
-sed --in-place '/~\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/install.sh/d' ~/.bashrc
-echo "~/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/install.sh" >> ~/.bashrc
+sed --in-place '/~\/JetsonSetup\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/install.sh/d' ~/.bashrc
+echo "~/JetsonSetup/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD/install.sh" >> ~/.bashrc
 
 while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
@@ -130,4 +130,4 @@ done
 
 rm $STATE
 # remove install process from .bashrc
-sed --in-place '/~\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/install.sh/d' ~/.bashrc
+sed --in-place '/~\/JetsonSetup\/Part-1-NVIDIA-Jetson-Nano-Headless-and-Boot-from-USB3-SSD\/install.sh/d' ~/.bashrc
