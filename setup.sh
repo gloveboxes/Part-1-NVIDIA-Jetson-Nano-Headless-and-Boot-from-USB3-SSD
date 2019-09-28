@@ -56,8 +56,6 @@ while $RUNNING; do
             sudo mkdir /media/usbdrive
             sudo mount /dev/sda1 /media/usbdrive
 
-            sudo apt update && sudo apt install rsync
-
             sudo rm -f -r rootOnUSB
             git clone https://github.com/JetsonHacksNano/rootOnUSB.git
 
