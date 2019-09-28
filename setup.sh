@@ -16,7 +16,25 @@ echo "~/JetsonSetup/setup.sh" >> ~/.bashrc
 while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
 
-  INIT)
+    INIT)
+        while true; do
+            read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
+            case $yn in
+                [Yy]* ) OS_UPDATE=true; break;;
+                [Qq]* ) RUNNING=false; break;;
+                [Nn]* ) break;;
+                * ) echo "Please answer yes(y), no(n), or quit(q).";;
+            esac
+        done
+
+        echo "SSD" > $STATE
+
+        if [ "$OS_UPDATE" = true ]; then
+            sudo apt update && sudo apt upgrade -y && sudo reboot
+        fi
+        ;;    
+
+    SSD)
         while true; do
             echo -e "\nThis script assumes the USB3 SSD Drive is mounted at /dev/sda ready for partitioning and formating" 
             read -p "Do you wish to enable USB3 SSD Boot Support [yes(y), no(n), or quit(q)] ?" yn
@@ -28,7 +46,7 @@ while $RUNNING; do
             esac
         done
 
-        echo "UPDATE" > $STATE
+        echo "HIGH_POWER" > $STATE
 
         if [ "$BOOT_USB3" = true ]; then
             echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
@@ -62,24 +80,6 @@ while $RUNNING; do
 
                 sudo reboot
             fi            
-        fi
-        ;;
-
-    UPDATE)
-        while true; do
-            read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
-            case $yn in
-                [Yy]* ) OS_UPDATE=true; break;;
-                [Qq]* ) RUNNING=false; break;;
-                [Nn]* ) break;;
-                * ) echo "Please answer yes(y), no(n), or quit(q).";;
-            esac
-        done
-
-        echo "HIGH_POWER" > $STATE
-
-        if [ "$OS_UPDATE" = true ]; then
-            sudo apt update && sudo apt upgrade -y && sudo reboot
         fi
         ;;    
 
