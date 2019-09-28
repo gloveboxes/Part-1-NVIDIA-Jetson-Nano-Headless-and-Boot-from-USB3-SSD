@@ -21,7 +21,7 @@ while $RUNNING; do
             read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) OS_UPDATE=true; break;;
-                [Qq]* ) RUNNING=false; exit 1;;
+                [Qq]* ) RUNNING=false;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
@@ -39,7 +39,7 @@ while $RUNNING; do
             read -p "Do you wish to set High Power Mode (This requires 4amp barrel power adapter) [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) HIGH_POWER=true; break;;
-                [Qq]* ) RUNNING=false; exit 1;;
+                [Qq]* ) RUNNING=false;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
@@ -57,7 +57,7 @@ while $RUNNING; do
             read -p "Do you wish to enable xRDP (with xfce) [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) XRDP=true; break;;
-                [Qq]* ) RUNNING=false; exit 1;;
+                [Qq]* ) RUNNING=false;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
@@ -79,7 +79,7 @@ while $RUNNING; do
             read -p "Do you wish to enable USB3 SSD Boot Support [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) BOOT_USB3=true; break;;
-                [Qq]* ) exit 1;;
+                [Qq]* ) RUNNING=false;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
