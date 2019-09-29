@@ -73,7 +73,7 @@ while $RUNNING; do
             echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
             sudo fdisk /dev/sda
             sudo mkfs.ext4 /dev/sda1
-            sudo mkdir /media/usbdrive
+            sudo mkdir -p /media/usbdrive
             sudo mount /dev/sda1 /media/usbdrive
 
             sudo rm -f -r rootOnUSB
@@ -86,14 +86,14 @@ while $RUNNING; do
 
             if [ $? -eq 0 ]; then
 
-                echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
 
-                sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
-                sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
+                # sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
+                # sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
 
                 sudo cat /boot/extlinux/extlinux.conf
 
