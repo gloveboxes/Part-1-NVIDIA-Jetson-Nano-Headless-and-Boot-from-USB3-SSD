@@ -33,7 +33,7 @@ while $RUNNING; do
         echo "UPDATE" > $STATE
 
         if [ "$REMOVE_OFFICE" = true ]; then
-            sudo apt remove --purge libreoffice* && sudo apt clean && sudo apt-get autoremove
+            sudo apt remove -y --purge libreoffice* && sudo apt clean && sudo apt-get -y autoremove
         fi
         ;;    
 
