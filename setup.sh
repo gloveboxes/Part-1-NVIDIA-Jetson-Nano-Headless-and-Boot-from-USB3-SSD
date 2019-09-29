@@ -101,7 +101,7 @@ while $RUNNING; do
                 # blkid -s UUID -o value /dev/sda1
 
                 echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      MENU LABEL primary kernel" | sudo tee -a /boot/extlinux/extlinux.conf
+                echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
                 # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
