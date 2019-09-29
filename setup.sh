@@ -51,7 +51,7 @@ while $RUNNING; do
 
         if [ "$OS_UPDATE" = true ]; then
             sudo apt update && sudo apt upgrade -y && sudo reboot
-            if [ $? -nq 0 ]; then
+            if [ $? -ne 0 ]; then
               echo "problem with update - retry."
               echo "UPDATE" > $STATE
             fi
