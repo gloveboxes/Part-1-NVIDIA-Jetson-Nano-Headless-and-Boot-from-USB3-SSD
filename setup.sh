@@ -85,8 +85,9 @@ while $RUNNING; do
             echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
             sudo fdisk /dev/sda
             sudo mkfs.ext4 /dev/sda1
-            sudo mkdir -p /media/usbdrive
-            sudo mount /dev/sda1 /media/usbdrive
+            DISKUUID=$(sudo blkid -s UUID -o value /dev/sda1)
+            # sudo mkdir -p /media/usbdrive
+            # sudo mount /dev/sda1 /media/usbdrive
 
             sudo rm -f -r rootOnUSB
             git clone https://github.com/JetsonHacksNano/rootOnUSB.git
@@ -94,7 +95,7 @@ while $RUNNING; do
             cd rootOnUSB
 
             ./addUSBToInitramfs.sh
-            ./copyRootToUSB.sh -d /media/usbdrive
+            ./copyRootToUSB.sh -p /dev/sda1
 
             if [ $? -eq 0 ]; then
 
@@ -105,7 +106,7 @@ while $RUNNING; do
                 echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
                 # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      APPEND ${cbootargs} root=UUID=$(blkid -s UUID -o value /dev/sda1) rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
+                echo "      APPEND ${cbootargs} root=UUID=$DISKUUID rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
 
 
                 sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
