@@ -41,7 +41,7 @@ while $RUNNING; do
             read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
                 [Yy]* ) OS_UPDATE=true; break;;
-                [Qq]* ) RUNNING=false; break;;
+                [Qq]* ) OS_UPDATE=false; RUNNING=false; break;;
                 [Nn]* ) break;;
                 * ) echo "Please answer yes(y), no(n), or quit(q).";;
             esac
