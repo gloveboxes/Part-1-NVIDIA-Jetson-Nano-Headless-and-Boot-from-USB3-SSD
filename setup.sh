@@ -17,8 +17,12 @@ echo "~/JetsonSetup/setup.sh" >> ~/.bashrc
 while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
 
-
     INIT)
+        sudo apt install -y nano htop
+        echo "OFFICE" > $STATE
+    ;;
+
+    OFFICE)
         REMOVE_OFFICE=false
         while true; do
             read -p "Do you wish to uninstall LibreOffice. [yes(y), no(n), or quit(q)] ?" yn
@@ -94,16 +98,16 @@ while $RUNNING; do
 
             if [ $? -eq 0 ]; then
 
+                # blkid -s UUID -o value /dev/sda1
+
                 # echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
-                # echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      MENU LABEL primary kernel" | sudo tee -a /boot/extlinux/extlinux.conf
                 # echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
                 # echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
                 # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
 
                 # sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
                 # sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
-
-                sudo cat /boot/extlinux/extlinux.conf
 
                 # sudo reboot
             fi            
