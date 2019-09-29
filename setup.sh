@@ -4,6 +4,7 @@ OS_UPDATE=false
 BOOT_USB3=false
 HIGH_POWER=false
 XRDP=false
+REMOVE_OFFICE=false
 
 
 STATE=~/.PyLabState
@@ -16,7 +17,26 @@ echo "~/JetsonSetup/setup.sh" >> ~/.bashrc
 while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
 
+
     INIT)
+        while true; do
+            read -p "Do you wish to uninstall LibreOffice. [yes(y), no(n), or quit(q)] ?" yn
+            case $yn in
+                [Yy]* ) REMOVE_OFFICE=true; break;;
+                [Qq]* ) RUNNING=false; break;;
+                [Nn]* ) break;;
+                * ) echo "Please answer yes(y), no(n), or quit(q).";;
+            esac
+        done
+
+        echo "UPDATE" > $STATE
+
+        if [ "$REMOVE_OFFICE" = true ]; then
+            sudo apt remove --purge libreoffice* && sudo apt clean && sudo apt-get autoremove
+        fi
+        ;;    
+
+    UPDATE)
         while true; do
             read -p "Do you wish to update the Jetson Operating System (Recommended). Note: This will reboot the device. [yes(y), no(n), or quit(q)] ?" yn
             case $yn in
