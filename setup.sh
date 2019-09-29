@@ -99,7 +99,7 @@ while $RUNNING; do
             if [ $? -eq 0 ]; then
 
                 # blkid -s UUID -o value /dev/sda1
-
+                echo "" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
                 echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
