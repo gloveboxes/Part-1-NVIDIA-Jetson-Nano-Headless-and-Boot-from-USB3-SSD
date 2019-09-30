@@ -86,8 +86,8 @@ while $RUNNING; do
             sudo fdisk /dev/sda
             sudo mkfs.ext4 /dev/sda1
             DISKUUID=$(sudo blkid -s UUID -o value /dev/sda1)
-            # sudo mkdir -p /media/usbdrive
-            # sudo mount /dev/sda1 /media/usbdrive
+            sudo mkdir -p /media/usbdrive
+            sudo mount /dev/sda1 /media/usbdrive
 
             sudo rm -f -r rootOnUSB
             git clone https://github.com/JetsonHacksNano/rootOnUSB.git
@@ -95,7 +95,7 @@ while $RUNNING; do
             cd rootOnUSB
 
             ./addUSBToInitramfs.sh
-            ./copyRootToUSB.sh -p /dev/sda1
+            ./copyRootToUSB.sh -p /media/usbdrive
 
             if [ $? -eq 0 ]; then
 
@@ -109,8 +109,8 @@ while $RUNNING; do
                 echo "      APPEND ${cbootargs} root=UUID=$DISKUUID rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
 
 
-                sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
-                sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
+                # sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
+                # sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
 
                 # sudo reboot
             fi            
