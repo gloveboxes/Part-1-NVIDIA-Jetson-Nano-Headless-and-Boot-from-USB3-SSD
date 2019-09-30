@@ -18,9 +18,50 @@ while $RUNNING; do
   case $([ -f $STATE ] && cat $STATE) in
 
     INIT)
-        sudo apt install -y nano htop rsync
-        echo "OFFICE" > $STATE
+        sudo apt update && sudo apt install -y nano htop rsync
+        echo "SSD" > $STATE
     ;;
+
+    SSD)
+        BOOT_USB3=false
+        while true; do
+            echo -e "\nThis script assumes the USB3 SSD Drive is mounted at /dev/sda ready for partitioning and formating" 
+            read -p "Do you wish to enable USB3 SSD Boot Support [yes(y), no(n), or quit(q)] ?" yn
+            case $yn in
+                [Yy]* ) BOOT_USB3=true; break;;
+                [Qq]* ) RUNNING=false; break;;
+                [Nn]* ) break;;
+                * ) echo "Please answer yes(y), no(n), or quit(q).";;
+            esac
+        done
+
+        if [ "$BOOT_USB3" = true ]; then
+            echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
+            echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
+            sudo fdisk /dev/sda
+            sudo mkfs.ext4 /dev/sda1
+            sudo e2label /dev/sda1 ssdroot
+            sudo mkdir -p /media/usbdrive
+            sudo mount /dev/sda1 /media/usbdrive
+
+            sudo rm -f -r rootOnUSB
+            git clone https://github.com/JetsonHacksNano/rootOnUSB.git
+
+            cd rootOnUSB
+
+            ./addUSBToInitramfs.sh
+            ./copyRootToUSB.sh -p /media/usbdrive
+
+            cd ..
+
+            if [ $? -eq 0 ]; then              
+                sudo cp extlinux.conf /boot/extlinux/extlinux.conf
+                echo "OFFICE" > $STATE
+                sudo reboot
+            fi            
+        fi
+        echo "OFFICE" > $STATE
+        ;;  
 
     OFFICE)
         REMOVE_OFFICE=false
@@ -39,7 +80,7 @@ while $RUNNING; do
         if [ "$REMOVE_OFFICE" = true ]; then
             sudo apt remove -y --purge libreoffice* && sudo apt clean && sudo apt-get -y autoremove
         fi
-        ;;    
+        ;;  
 
     UPDATE)
         OS_UPDATE=false
@@ -53,75 +94,17 @@ while $RUNNING; do
             esac
         done
 
-        echo "SSD" > $STATE
+        echo "HIGH_POWER" > $STATE
 
         if [ "$OS_UPDATE" = true ]; then
-            sudo apt update && sudo apt install -y rsync
-            # sudo apt update && sudo apt upgrade -y && sudo reboot
+            sudo apt update && sudo apt upgrade -y && sudo reboot
             if [ $? -ne 0 ]; then
               echo -e "\nError: Problem with OS Update/Upgrade.\nReboot device if the problem persists.\nRetry.\n"
               echo "UPDATE" > $STATE
             fi
 
         fi
-        ;;    
-
-    SSD)
-        BOOT_USB3=false
-        while true; do
-            echo -e "\nThis script assumes the USB3 SSD Drive is mounted at /dev/sda ready for partitioning and formating" 
-            read -p "Do you wish to enable USB3 SSD Boot Support [yes(y), no(n), or quit(q)] ?" yn
-            case $yn in
-                [Yy]* ) BOOT_USB3=true; break;;
-                [Qq]* ) RUNNING=false; break;;
-                [Nn]* ) break;;
-                * ) echo "Please answer yes(y), no(n), or quit(q).";;
-            esac
-        done
-
-        echo "HIGH_POWER" > $STATE
-
-        if [ "$BOOT_USB3" = true ]; then
-            echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
-            echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
-            sudo fdisk /dev/sda
-            sudo mkfs.ext4 /dev/sda1
-            # DISKUUID=$(sudo blkid -s UUID -o value /dev/sda1)
-            sudo e2label /dev/sda1 ssdroot
-            sudo mkdir -p /media/usbdrive
-            sudo mount /dev/sda1 /media/usbdrive
-
-            sudo rm -f -r rootOnUSB
-            git clone https://github.com/JetsonHacksNano/rootOnUSB.git
-
-            cd rootOnUSB
-
-            ./addUSBToInitramfs.sh
-            ./copyRootToUSB.sh -p /media/usbdrive
-
-            cd ..
-
-            if [ $? -eq 0 ]; then
-              
-                sudo cp extlinux.conf /boot/extlinux/extlinux.conf
-
-                # blkid -s UUID -o value /dev/sda1
-                # echo "" | sudo tee -a /boot/extlinux/extlinux.conf
-                # echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
-                # echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
-                # echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
-                # echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
-                # # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
-                # echo "      APPEND ${cbootargs} root=UUID=$DISKUUID rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
-
-
-                # sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
-                # sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
-
-                # sudo reboot
-            fi            
-        fi
-        ;;    
+        ;;         
 
     HIGH_POWER)
         HIGH_POWER=false
