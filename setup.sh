@@ -35,6 +35,8 @@ while $RUNNING; do
             esac
         done
 
+        echo "OFFICE" > $STATE
+
         if [ "$BOOT_USB3" = true ]; then
             echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
             echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
@@ -56,11 +58,10 @@ while $RUNNING; do
 
             if [ $? -eq 0 ]; then              
                 sudo cp extlinux.conf /boot/extlinux/extlinux.conf
-                echo "OFFICE" > $STATE
                 sudo reboot
             fi            
         fi
-        echo "OFFICE" > $STATE
+        
         ;;  
 
     OFFICE)
