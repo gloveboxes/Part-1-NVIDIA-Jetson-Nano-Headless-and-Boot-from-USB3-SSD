@@ -97,7 +97,7 @@ while $RUNNING; do
             ./addUSBToInitramfs.sh
             ./copyRootToUSB.sh -p /media/usbdrive
 
-            if [ $? -eq 0 ]; then
+            # if [ $? -eq 0 ]; then
 
                 # blkid -s UUID -o value /dev/sda1
                 # echo "" | sudo tee -a /boot/extlinux/extlinux.conf
@@ -113,7 +113,7 @@ while $RUNNING; do
                 # sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
 
                 # sudo reboot
-            fi            
+            # fi            
         fi
         ;;    
 
