@@ -56,7 +56,8 @@ while $RUNNING; do
         echo "SSD" > $STATE
 
         if [ "$OS_UPDATE" = true ]; then
-            sudo apt update && sudo apt upgrade -y && sudo reboot
+            sudo apt update && sudo apt install -y rsync
+            # sudo apt update && sudo apt upgrade -y && sudo reboot
             if [ $? -ne 0 ]; then
               echo -e "\nError: Problem with OS Update/Upgrade.\nReboot device if the problem persists.\nRetry.\n"
               echo "UPDATE" > $STATE
@@ -81,8 +82,6 @@ while $RUNNING; do
         echo "HIGH_POWER" > $STATE
 
         if [ "$BOOT_USB3" = true ]; then
-            sudo apt update && sudo apt install -y rsync
-            
             echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
             echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
             sudo fdisk /dev/sda
