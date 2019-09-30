@@ -100,13 +100,13 @@ while $RUNNING; do
             if [ $? -eq 0 ]; then
 
                 # blkid -s UUID -o value /dev/sda1
-                echo "" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
-                # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
-                echo "      APPEND ${cbootargs} root=UUID=$DISKUUID rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "LABEL usbssd" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      MENU LABEL usbssd kernel" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      LINUX /boot/Image" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      INITRD /boot/initrd-xusb.img" | sudo tee -a /boot/extlinux/extlinux.conf
+                # # echo "      APPEND ${cbootargs} rootfstype=ext4 root=/dev/sda1 rw rootwait" | sudo tee -a /boot/extlinux/extlinux.conf
+                # echo "      APPEND ${cbootargs} root=UUID=$DISKUUID rootwait rootfstype=ext4" | sudo tee -a /boot/extlinux/extlinux.conf
 
 
                 # sudo sed -i 's/TIMEOUT 30/TIMEOUT 10/g' /boot/extlinux/extlinux.conf
