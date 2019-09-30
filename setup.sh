@@ -81,11 +81,14 @@ while $RUNNING; do
         echo "HIGH_POWER" > $STATE
 
         if [ "$BOOT_USB3" = true ]; then
+            sudo apt update && sudo apt install -y rsync
+            
             echo -e "\np = print partitions, \nd = delete a partition, \nn = new partition -> create a primary partition, \nw = write the partition information to disk, \nq = quit\n"
             echo -e "\nUsage: \n1) p to print existing partitions, \n2) d to delete existing, \n3) n to create new partition, take defaults, \n4) finally w to write changes.\n"
             sudo fdisk /dev/sda
             sudo mkfs.ext4 /dev/sda1
-            DISKUUID=$(sudo blkid -s UUID -o value /dev/sda1)
+            # DISKUUID=$(sudo blkid -s UUID -o value /dev/sda1)
+            sudo e2label /dev/sda1 ssdroot
             sudo mkdir -p /media/usbdrive
             sudo mount /dev/sda1 /media/usbdrive
 
@@ -97,7 +100,11 @@ while $RUNNING; do
             ./addUSBToInitramfs.sh
             ./copyRootToUSB.sh -p /media/usbdrive
 
-            # if [ $? -eq 0 ]; then
+            cd ..
+
+            if [ $? -eq 0 ]; then
+              
+                sudo cp extlinux.conf /boot/extlinux/extlinux.conf
 
                 # blkid -s UUID -o value /dev/sda1
                 # echo "" | sudo tee -a /boot/extlinux/extlinux.conf
@@ -113,7 +120,7 @@ while $RUNNING; do
                 # sudo sed -i 's/DEFAULT primary/DEFAULT usbssd/g' /boot/extlinux/extlinux.conf
 
                 # sudo reboot
-            # fi            
+            fi            
         fi
         ;;    
 
